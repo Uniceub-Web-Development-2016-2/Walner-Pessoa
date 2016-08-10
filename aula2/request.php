@@ -11,11 +11,12 @@ class Request
     public function __construct($method, $protocol, $ip, $resource, $parameters)
     {
 		//$this -> $method = $method;
-		$method->setMethod($method); 
-		$protocol->setProtocol($protocol);
-		$ip->setIp($ip); 
-		$resource->setResource($resource); 
-		$parameters->setParameters($parameters); 
+
+		$this->setMethod($method); 
+		$this>setProtocol($protocol);
+		$this>setIp($ip); 
+		$this->setResource($resource); 
+		$this->setParameters($parameters); 
 
     }
 
