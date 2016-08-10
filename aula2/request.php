@@ -10,6 +10,12 @@ class Request
 
     public function __construct($method, $protocol, $ip, $resource, $parameters)
     {
+		//$this -> $method = $method;
+		$method->setMethod($method); 
+		$protocol->setProtocol($protocol);
+		$ip->setIp($ip); 
+		$resource->setResource($resource); 
+		$parameters->setParameters($parameters); 
 
     }
 
@@ -24,7 +30,7 @@ class Request
         return $this->method;
     }
 
-    public function setFName($protocol)
+    public function setProtocol($protocol)
     {
         $this->protocol = $protocol
 	}
@@ -64,19 +70,41 @@ class Request
         return $this->parameters;
     }
 
-
-
-
-
-    public function toString($parameters)
+    public function joinParameters($parameters)
     {
-        foreach ($parameters as $npar) {
+    	$parametersFinal="";
+    	foreach ($parameters as $key => &$val) {
+
+        	$parametersFinal=$parametersFinal . $key . "=" . $val . "&";
+
 
         }
-        return $number;
+        	return substr($parametersFinal,0, -1);
+    }
+
+
+
+
+    public function toString()
+    {
+    	$parameterNew= new joinParameters($parameters);
+
+        foreach ($parameters as $npar) {
+
+       // }
+       // return $number;
     }
 }
 
+$parameters = array(
+    q    => "google",
+    oq  => "goog",
+    aqs  => "chrome.0.0l3j69i60j69i65l2.1110j0j4",
+    sourceid => "chrome",
+    ie => "UTF-8"
+);
+//var_dump($parameters);
 
-$request= new request("https://","www.google.com.br/", "search?",);
+
+$request= new request("https","www.google.com.br", "search?",$parameters);
 echo $request->toString();
