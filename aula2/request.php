@@ -98,16 +98,25 @@ class Request
     public function toString()
     {
     	//$parameterNew = new joinParameters($parameters);
-		$url = $this->protocol.'://'.$this->ip.'/'.$this->resource.'?';
+		$result = $this->protocol.'://'.$this->ip.'/'.$this->resource.'?';
             foreach($this->parameters as $key=>$value)
             {
-        	$url=$url.$key.'='.$value.'&amp';
+        	$result=$result.$key.'='.$value.'&amp';
         	}
-            return substr($url,0,-4);	
+        	$result=substr($result,0,-4);
+
+            return $result;	
 	}
 
 }
 
-$param = array('q'=>'google', 'oq'=>'goog', 'aqs'=>'chrome.0.0l3j69i60j69i65l2.1110j0j4', 'sourceid'=>'chrome', 'ie'=> 'UTF-8');
-$url = new Request('post','https','www.google.com.br', 'search', $param);
-echo $url->toString();
+
+$param = array('q'=>'ceub', 'oq'=>'goog', 'aqs'=>'chrome.0.0l3j69i60j69i65l2.1110j0j4', 'sourceid'=>'chrome', 'ie'=> 'UTF-8');
+
+$result = new Request('post','https','www.google.com.br', 'search', $param);
+$url = $result->toString();
+echo $url;
+
+$resultFinal = file_get_contents($url,FALSE,NULL); 
+
+echo $resultFinal;
