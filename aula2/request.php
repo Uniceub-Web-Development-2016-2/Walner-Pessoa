@@ -1,5 +1,4 @@
 <?php
-
 class Request
 {
     private $method;
@@ -10,16 +9,35 @@ class Request
 
     public function __construct($method, $protocol, $ip, $resource, $parameters)
     {
-		//$this -> $method = $method;
+
+
+		//$this->protocol = $protocol;
+		//$this->ip = $ip;
+		//$this->resource = $resource;
+		//$this->parameters = $parameters;
+		//$this->method = $method; 
 
 		$this->setMethod($method); 
-		$this>setProtocol($protocol);
-		$this>setIp($ip); 
+		$this->setProtocol($protocol);
+		$this->setIp($ip); 
 		$this->setResource($resource); 
-		$this->setParameters($parameters); 
+		$this->setParameters($parameters);
+
 
     }
 
+
+	/*public function __set($atrib, $value)
+	{
+	
+		$this->$atrib = $value;
+	}
+	public function __get($atrib)
+	{
+		return $this->$atrib;
+	}
+
+	*/
 
     public function setMethod($method)
     {
@@ -28,17 +46,17 @@ class Request
 
     public function getMethod()
     {
-        return $this->method;
+        return $this->$method;
     }
 
     public function setProtocol($protocol)
     {
-        $this->protocol = $protocol
+        $this->protocol = $protocol;
 	}
 
     public function getProtocol()
     {
-        return $this->protocol;
+        return $this->$protocol;
     }
 
     public function setIp($ip)
@@ -48,7 +66,7 @@ class Request
 
     public function getIp()
     {
-        return $this->ip;
+        return $this->$ip;
     }
 
     public function setResource($resource)
@@ -58,7 +76,7 @@ class Request
 
     public function getResource()
     {
-        return $this->resource;
+        return $this->$resource;
     }
 
     public function setParameters($parameters)
@@ -68,44 +86,28 @@ class Request
 
     public function getParameters()
     {
-        return $this->parameters;
-    }
-
-    public function joinParameters($parameters)
-    {
-    	$parametersFinal="";
-    	foreach ($parameters as $key => &$val) {
-
-        	$parametersFinal=$parametersFinal . $key . "=" . $val . "&";
-
-
-        }
-        	return substr($parametersFinal,0, -1);
+        return $this->$parameters;
     }
 
 
 
 
+
+
+	
     public function toString()
     {
-    	$parameterNew= new joinParameters($parameters);
+    	//$parameterNew = new joinParameters($parameters);
+		$url = $this->protocol.'://'.$this->ip.'/'.$this->resource.'?';
+            foreach($this->parameters as $key=>$value)
+            {
+        	$url=$url.$key.'='.$value.'&amp';
+        	}
+            return substr($url,0,-4);	
+	}
 
-        foreach ($parameters as $npar) {
-
-       // }
-       // return $number;
-    }
 }
 
-$parameters = array(
-    q    => "google",
-    oq  => "goog",
-    aqs  => "chrome.0.0l3j69i60j69i65l2.1110j0j4",
-    sourceid => "chrome",
-    ie => "UTF-8"
-);
-//var_dump($parameters);
-
-
-$request= new request("https","www.google.com.br", "search?",$parameters);
-echo $request->toString();
+$param = array('q'=>'google', 'oq'=>'goog', 'aqs'=>'chrome.0.0l3j69i60j69i65l2.1110j0j4', 'sourceid'=>'chrome', 'ie'=> 'UTF-8');
+$url = new Request('post','https','www.google.com.br', 'search', $param);
+echo $url->toString();
