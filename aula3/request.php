@@ -16,7 +16,13 @@ class Request
 		$this->ipServidor = $ipServidor;
 		$this->resource = self::getResource($resource);
 		//$this->parameters = self::toArray($parameters);
+		//opção metodo 1 toArray
+		//
 		$this->parameters = $this->toArray($parameters);
+		//
+		//opção metodo 2 toArrayParse
+		//$this->parameters = $this->toArrayParse($parameters);
+
 
     }
 	public function __set($atrib, $value)
@@ -58,4 +64,11 @@ class Request
     		return $arrayParamameters;
     	}
 	}
+	    public function toArrayParse($parametros)
+	    {
+	    	parse_str($parametros,$arrayParamameters);
+	    	//var_dump($arrayParamameters);
+	    	return $arrayParamameters;
+	    }
+
 }
