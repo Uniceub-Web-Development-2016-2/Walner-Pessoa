@@ -1,0 +1,140 @@
+# Trabalho disciplina Caio - 
+# Disciplina Desenvolvimento WEB - 2º sem - 2016
+swagger: '2.0'
+# Metadados
+info:
+  version: "1.0.0"
+  title: Desafio Poesia API
+  description : A aplicação WEB DesafioPoesiaAPP é um rankeador de audios de poesias. Além de  ser uma forma divertida de conhecer a poesia, tem como objetivo levar a poesia em forma de áudio, apenas áudio, não só para os amantes dessa arte, mas, principalmente, dar oportunidade para que não sabe ou não gostam desse estilo literário.
+  contact:
+    name: Walner API team
+    email: wallleu@gmail.com
+    
+host: localhost:8888
+basePath: /Applications/MAMP/htdocs
+schemes:
+  - http
+definitions:
+  Curador:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      nome:
+        type: string
+      data:
+        type: string
+        format: date
+      senha:
+        type: string
+  Poema:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      nome:
+        type: string
+      cod_autor:
+        type: string
+      txt_poema:
+        type: string
+      data_update:
+        type: string
+        format: date
+
+parameters:
+  curador-id:
+    name: id
+    in: path
+    description: id do curador
+    type: integer
+    format: int32
+    required: true
+  poema-id:
+    name: id
+    in: path
+    description: id do poema
+    type: integer
+    format: int32
+    required: true
+
+paths:
+  # This is a path endpoint. Change it.
+  /curadores:
+    post:
+      summary: Cria novo curador
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: curador
+          required: true
+          schema:
+            $ref: '#/definitions/Curador'
+      responses:
+        '201':
+          description: Novo Curador criado
+          schema:
+            $ref: '#/definitions/Curador'
+          headers:
+            Location:
+              description: uri do novo curador
+              type: string  
+            
+  /curadores/{id}:
+    put:
+      summary: Confirma um cadastro de Curador
+      parameters:
+        - $ref: '#/parameters/curador-id'
+      responses:
+        '200':
+          description: 'Cadastro confirmado'
+    delete:
+      summary: Apaga um curador
+      parameters:
+        - $ref: '#/parameters/curador-id'
+      responses:
+        '200':
+          description: 'Curador apagado'
+#
+  /poemas:
+    post:
+      summary: Cria novo poema
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: poema
+          required: true
+          schema:
+            $ref: '#/definitions/Poema'
+      responses:
+        '201':
+          description: Novo Poema criado
+          schema:
+            $ref: '#/definitions/Poema'
+          headers:
+            Location:
+              description: uri do novo poema
+              type: string  
+  /poemas/{id}:
+    put:
+      summary: Confirma um cadastro de Poemas
+      parameters:
+        - $ref: '#/parameters/poema-id'
+      responses:
+        '200':
+          description: 'Poema confirmado'
+    delete:
+      summary: Apaga um poema
+      parameters:
+        - $ref: '#/parameters/poema-id'
+      responses:
+        '200':
+          description: 'Poema apagado'
