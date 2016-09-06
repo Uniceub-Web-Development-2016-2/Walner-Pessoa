@@ -1,0 +1,283 @@
+# Trabalho disciplina Caio - 
+# Disciplina Desenvolvimento WEB - 2º sem - 2016
+swagger: '2.0'
+# Metadados
+info:
+  version: "1.0.0"
+  title: Desafio Poesia API
+  description : A aplicação WEB DesafioPoesiaAPP é um rankeador de audios de poesias. Além de  ser uma forma divertida de conhecer a poesia, tem como objetivo levar a poesia em forma de áudio, apenas áudio, não só para os amantes dessa arte, mas, principalmente, dar oportunidade para que não sabe ou não gostam desse estilo literário.
+  contact:
+    name: Walner API team
+    email: wallleu@gmail.com
+#####
+#  Host, Base Path, Schema and Content Types
+#####
+host: localhost:8888
+basePath: /Applications/MAMP/htdocs
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - application/json
+  
+#####
+#  Tags
+#####
+  
+
+tags:
+  - name: Users
+  - name: Relationships
+  - name: Media
+  - name: Commnts
+  - name: Likes
+  - name: Tags
+  - name: Location
+  - name: Subscribtions
+
+#####
+#  Parameters
+#####
+
+parameters:
+  user-id:
+    name: user-id
+    in: path
+    description: The user identifier number
+    type: number
+    required: true
+  tag-name:
+    name: tag-name
+    in: path
+    description: Tag name
+    type: string
+    required: true
+    
+    
+#####
+#  Paths
+#####
+
+
+paths:
+  # This is a path endpoint. Change it.
+  /users/{user-id}:
+    parameters:
+      - $ref: '#/parameters/user-id'
+    get:
+      security:
+        - key: []
+        - oauth:
+          - basic
+      tags:
+        - Users
+      description: Get basic information about a user.
+      responses:
+        200:
+          description: The user object
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/User'
+                
+                
+                
+/users/self/media/liked:
+    get:
+      tags:
+        - Users
+      description: |
+        See the list of media liked by the authenticated user.
+        Private media is returned as long as the authenticated user
+        has permissionto view that media. Liked media lists are only
+        available for the currently authenticated user.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Media'
+      parameters:
+        - name: count
+          in: query
+          description: Count of media to return.
+          type: integer
+        - name: max_like_id
+          in: query
+          description: Return media liked before this id.
+          type: integer
+
+/media/{media-id}:
+    parameters:
+      - name: media-id
+        in: path
+        description: The media ID
+        type: integer
+        required: true
+    get:
+      tags:
+        - Media
+      description: |
+        Get information about a media object.
+        The returned type key will allow you to differentiate between `image`
+        and `video` media.
+
+        Note: if you authenticate with an OAuth Token, you will receive the
+        `user_has_liked` key which quickly tells you whether the current user
+        has liked this media item.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Media'
+
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      username:
+        type: string
+      full_name:
+        type: string
+      profile_picture:
+        type: string
+      bio:
+        type: string
+      website:
+        type: string
+      counts:
+        type: object
+        properties:
+          media:
+            type: integer
+          follows:
+            type: integer
+          follwed_by:
+            type: integer
+  Media:
+    type: object
+    properties:
+      created_time:
+        description: Epoc time (ms)
+        type: integer
+      type:
+        type: string
+      filter:
+        type: string
+      tags:
+        type: array
+        items:
+          $ref: '#/definitions/Tag'
+      id:
+        type: integer
+      user:
+        $ref: '#/definitions/MiniProfile'
+      users_in_photo:
+        type: array
+        items:
+          $ref: '#/definitions/MiniProfile'
+      location:
+        $ref: '#/definitions/Location'
+      comments::
+        type: object
+        properties:
+          count:
+            type: integer
+          data:
+            type: array
+            items:
+              $ref: '#/definitions/Comment'
+      likes:
+        type: object
+        properties:
+          count:
+            type: integer
+          data:
+            type: array
+            items:
+              $ref: '#/definitions/MiniProfile'
+      #images:
+      #  properties:
+      #    low_resolution:
+      #      $ref: '#/definitions/Image'
+      #    thumbnail:
+      #      $ref: '#/definitions/Image'
+      #    standard_resolution:
+      #      $ref: '#/definitions/Image'
+      videos:
+        properties:
+          low_resolution:
+            $ref: '#/definitions/Image'
+          standard_resolution:
+            $ref: '#/definitions/Image'
+  Location:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      latitude:
+        type: number
+      longitude:
+        type: number
+  Comment:
+    type: object
+    properties:
+      id:
+        type: string
+      created_time:
+        type: string
+      text:
+        type: string
+      from:
+        $ref: '#/definitions/MiniProfile'
+  Like:
+    type: object
+    properties:
+      user_name:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      type:
+        type: string
+      id:
+        type: string
+  Tag:
+    type: object
+    properties:
+      media_count:
+        type: integer
+      name:
+        type: string
+  Image:
+    type: object
+    properties:
+      width:
+        type: integer
+      height:
+        type: integer
+      url:
+        type: string
+  MiniProfile:
+    type: object
+    description: A shorter version of User for likes array
+    properties:
+      user_name:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+      profile_picture:
+        type: string
