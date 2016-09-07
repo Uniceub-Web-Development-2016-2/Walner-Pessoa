@@ -5,7 +5,7 @@
 class RequestController
 {
 	const VALID_METHODS = array('GET', 'POST', 'PUT', 'DELETE');
-	const VALID_PROTOCOL = array('http', 'https');
+	const VALID_PROTOCOL = array('HTTP', 'HTTPS');
 
 
 	public function create_request($request_info)
@@ -16,17 +16,17 @@ class RequestController
 			
 		}	
 		
-		if(!self::is_valid_prothocol($request_info['SERVER_PROTOCOL']))
+		if(!self::is_valid_protocol($request_info['SERVER_PROTOCOL']))
 		{
 			return array("code" => "418", "message" => "I'm a teapot");
 			
 		}
 		
 
-
-	//	$request_info['REMOTE_ADDR'];
-	//	$request_info['SERVER_ADDR'];
-	//	$request_info['SERVER_PROTOCOL'];
+	//	$request_info['REQUEST_METHOD'];  // feito
+	//	$request_info['SERVER_PROTOCOL'];  // feito
+	//	$request_info['REMOTE_ADDR'];  // nao precisa fazer
+	//	$request_info['SERVER_ADDR'];  // nao precisa fazer
 	//	$request_info['REQUEST_URI'];
 	//	$request_info['QUERY_STRING'];
 	//	file_get_contents('php://input');
@@ -44,7 +44,7 @@ class RequestController
 	}
 	public function is_valid_protocol($protocol)
 	{
-		if( is_null($method) || !in_array($method, self::VALID_PROTOCOL))
+		if( is_null($protocol) || !in_array($protocol, self::VALID_PROTOCOL))
 			return false;
 		
 		return true;
