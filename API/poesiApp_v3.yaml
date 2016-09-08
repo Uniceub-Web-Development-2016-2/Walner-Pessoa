@@ -1,0 +1,883 @@
+# Trabalho disciplina Caio - 
+# Disciplina Desenvolvimento WEB - 2º sem - 2016
+swagger: '2.0'
+# Metadados
+info:
+  version: "1.0.0"
+  title: Desafio Poesia API
+  description : A aplicação WEB DesafioPoesiaAPP é um rankeador de audios de poesias. Além de  ser uma forma divertida de conhecer a poesia, tem como objetivo levar a poesia em forma de áudio, apenas áudio, não só para os amantes dessa arte, mas, principalmente, dar oportunidade para que não sabe ou não gostam desse estilo literário.
+  contact:
+    name: Walner API team
+    email: wallleu@gmail.com
+#####
+#  Host, Base Path, Schema and Content Types
+#####
+host: localhost:8888
+basePath: /Applications/MAMP/htdocs
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - application/json
+  
+#####
+#  Tags
+#####
+  
+
+tags:
+  - name: Users
+  - name: Relationships
+  - name: Mp3
+  - name: Comments
+  - name: Likes
+  - name: Tags
+  - name: Location
+  #- name: Subscribtions
+  
+
+#####
+#  Parameters
+#####
+
+parameters:
+  user-id:
+    name: user-id
+    in: path
+    description: The user identifier number
+    type: number
+    required: true
+  tag-name:
+    name: tag-name
+    in: path
+    description: Tag name
+    type: string
+    required: true
+    
+    
+#####
+#  Paths
+#####
+
+
+paths:
+  /users/{user-id}:
+    parameters:
+      - $ref: '#/parameters/user-id'
+    get:
+
+      tags:
+        - Users
+      description: Get basic information about a user.
+      responses:
+        200:
+          description: The user object
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/User'
+
+  /users/self/feed:
+    get:
+      tags:
+        - Users
+      description: See the authenticated user's feed.
+      parameters:
+        - name: count
+          in: query
+          description: Count of mp3 to return.
+          type: integer
+        - name: max_id
+          in: query
+          description: Return mp3 earlier than this max_id.s
+          type: integer
+        - name: min_id
+          in: query
+          description: Return mp3 later than this min_id.
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Mp3'
+
+  /users/{user-id}/mp3/recent:
+    parameters:
+      - $ref: '#/parameters/user-id'
+    get:
+      tags:
+        - Users
+      responses:
+        200:
+          description: |
+            Get the most recent mp3 published by a user. To get the most recent
+            mp3 published by the owner of the access token, you can use `self`
+            instead of the `user-id`.
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Mp3'
+
+      parameters:
+        - name: count
+          in: query
+          description: Count of mp3 to return.
+          type: integer
+        - name: max_timestamp
+          in: query
+          description: Return mp3 before this UNIX timestamp.
+          type: integer
+        - name: min_timestamp
+          in: query
+          description: Return mp3 after this UNIX timestamp.
+          type: integer
+        - name: min_id
+          in: query
+          description: Return mp3 later than this min_id.
+          type: string
+        - name: max_id
+          in: query
+          description: Return mp3 earlier than this max_id.
+          type: string
+
+  /users/self/mp3/liked:
+    get:
+      tags:
+        - Users
+      description: |
+        See the list of mp3 liked by the authenticated user.
+        Private mp3 is returned as long as the authenticated user
+        has permissionto view that mp3. Liked mp3 lists are only
+        available for the currently authenticated user.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Mp3'
+      parameters:
+        - name: count
+          in: query
+          description: Count of mp3 to return.
+          type: integer
+        - name: max_like_id
+          in: query
+          description: Return mp3 liked before this id.
+          type: integer
+
+  /users/search:
+    get:
+      tags:
+        - Users
+      description: Search for a user by name.
+      parameters:
+        - name: q
+          in: query
+          description: A query string
+          type: string
+          required: true
+        - name: count
+          in: query
+          description: Number of users to return.
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/MiniProfile'
+                  
+  /users/{user-id}/follows:
+    parameters:
+      - $ref: '#/parameters/user-id'
+    get:
+      tags:
+        - Relationships
+      description: Get the list of users this user follows.
+      responses:
+        200:
+          description: OK
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/MiniProfile'
+  /users/self/requested-by:
+    get:
+      tags:
+        - Relationships
+      description: |
+        List the users who have requested this user's permission to follow.
+      responses:
+        200:
+          description: OK
+          schema:
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/MiniProfile'
+
+  /users/{user-id}/relationship:
+    parameters:
+      - $ref: '#/parameters/user-id'
+    post:
+      tags:
+        - Relationships
+      description: |
+        Modify the relationship between the current user and thetarget user.
+
+      parameters:
+        - name: action
+          in: body
+          description: One of follow/unfollow/block/unblock/approve/ignore.
+          schema:
+            type: string
+            enum:
+              - follow
+              - unfollow
+              - block
+              - unblock
+              - approve
+
+      responses:
+        200:
+          description: OK
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/MiniProfile'
+                  
+  /mp3/{mp3-id}:
+    parameters:
+      - name: mp3-id
+        in: path
+        description: The mp3 ID
+        type: integer
+        required: true
+    get:
+      tags:
+        - Mp3
+      description: |
+        Get information about a mp3 object.
+        The returned type key will allow you to differentiate between `image`
+        and `audio` mp3.
+
+        Note: if you authenticate with an OAuth Token, you will receive the
+        `user_has_liked` key which quickly tells you whether the current user
+        has liked this mp3 item.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Mp3'
+            
+  /mp31/{shortcode}: #FIXME: correct path is /mp3/{shortcode}
+    parameters:
+      - name: shortcode
+        in: path
+        description: The mp3 shortcode in case the URL where the audio addres
+        type: string
+        required: true
+    get:
+      tags:
+        - Mp3
+      description: |
+        This endpoint returns the same response as **GET** `/mp3/mp3-id`.
+
+        A mp3 object's shortcode can be found audios. 
+
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Mp3'
+
+  /mp3/search:
+    get:
+      tags:
+        - Mp3
+      description: |
+        Search for mp3 in a given area. The default time span is set to 5
+        days. The time span must not exceed 7 days. Defaults time stamps cover
+        the last 5 days. Can return mp3 type.
+
+      parameters:
+        - name: LAT
+          description: |
+            Latitude of the center search coordinate. If used, lng is required.
+          type: number
+          in: query
+        - name: MIN_TIMESTAMP
+          description: |
+            A unix timestamp. All mp3 returned will be taken later than
+            this timestamp.
+          type: integer
+          in: query
+        - name: LNG
+          description: |
+            Longitude of the center search coordinate. If used, lat is required.
+          type: number
+          in: query
+        - name: MAX_TIMESTAMP
+          description: |
+            A unix timestamp. All mp3 returned will be taken earlier than this
+            timestamp.
+          type: integer
+          in: query
+        - name: DISTANCE
+          description:  Default is 1km (distance=1000), max distance is 5km.
+          type: integer
+          maximum: 5000
+          default: 1000
+          in: query
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            description: List of all mp3 with added `distance` property
+            properties:
+              data:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '#/definitions/Mp3'
+                    -
+                      properties:
+                        distance:
+                          type: number
+
+  /mp3/popular:
+    get:
+      tags:
+        - Mp3
+      description: |
+        Get a list of what mp3 is most popular at the moment.
+        Can return only mp3 types.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Mp3'
+
+  /mp3/{mp3-id}/comments:
+    parameters:
+      - name: mp3-id
+        in: path
+        description: Mp3 ID
+        type: integer
+        required: true
+    get:
+      tags:
+        - Comments
+      description: |
+        Get a list of recent comments on a mp3 object.
+      responses:
+        200:
+          description: OK
+          schema:
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: number
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Comment'
+    post:
+      tags:
+        - Comments
+        - Mp3
+      description: |
+        Create a comment on a mp3 object with the following rules:
+
+        * The total length of the comment cannot exceed 300 characters.
+        * The comment cannot contain more than 4 hashtags.
+        * The comment cannot contain more than 1 URL.
+        * The comment cannot consist of all capital letters.
+
+      parameters:
+        - name: TEXT
+          description: |
+            Text to post as a comment on the mp3 object as specified in
+            mp3-id.
+          in: body
+          schema:
+            type: number
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: number
+              data:
+                type: object
+    delete:
+      tags:
+        - Comments
+      description: |
+        Remove a comment either on the authenticated user's mp3 object or
+        authored by the authenticated user.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: number
+              data:
+                type: object
+
+  /mp3/{mp3-id}/likes:
+    parameters:
+      - name: mp3-id
+        in: path
+        description: Mp3 ID
+        type: integer
+        required: true
+    get:
+      tags:
+        - Likes
+        - Mp3
+      description: |
+        Get a list of users who have liked this mp3.
+      responses:
+        200:
+          description: OK
+          schema:
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: number
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Like'
+    post:
+      tags:
+        - Likes
+      description: Set a like on this mp3 by the currently authenticated user.
+
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: number
+              data:
+                type: object
+    delete:
+      tags:
+        - Likes
+      description: |
+        Remove a like on this mp3 by the currently authenticated user.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: number
+              data:
+                type: object
+
+  /tags/{tag-name}:
+    parameters:
+      - $ref: '#/parameters/tag-name'
+    get:
+      tags:
+        - Tags
+      description: Get information about a tag object.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Tag'
+
+  /tags/{tag-name}/mp3/recent:
+    parameters:
+      - $ref: '#/parameters/tag-name'
+    get:
+      tags:
+        - Tags
+      description: |
+        Get a list of recently tagged mp3. Use the `max_tag_id` and
+        `min_tag_id` parameters in the pagination response to paginate through
+        these objects.
+      responses:
+        200:
+          description: OK
+          schema:
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Tag'
+
+  /tags/search:
+    get:
+      tags:
+        - Tags
+      parameters:
+        - name: q
+          description: |
+            A valid tag name without a leading #. (eg. snowy, nofilter)
+          in: query
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              meta:
+                properties:
+                  code:
+                    type: integer
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Tag'
+
+  /locations/{location-id}:
+    parameters:
+      - name: location-id
+        description: Location ID
+        in: path
+        type: integer
+        required: true
+    get:
+      tags:
+        - Location
+      description: Get information about a location.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Location'
+
+  /locations/{location-id}/mp3/recent:
+    parameters:
+      - name: location-id
+        description: Location ID
+        in: path
+        type: integer
+        required: true
+    get:
+      tags:
+        - Location
+        - Mp3
+      description: Get a list of recent mp3 objects from a given location.
+      parameters:
+        - name: max_timestamp
+          in: query
+          description: Return mp3 before this UNIX timestamp.
+          type: integer
+        - name: min_timestamp
+          in: query
+          description: Return mp3 after this UNIX timestamp.
+          type: integer
+        - name: min_id
+          in: query
+          description: Return mp3 later than this min_id.
+          type: string
+        - name: max_id
+          in: query
+          description: Return mp3 earlier than this max_id.
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Mp3'
+
+  /locations/search:
+    get:
+      tags:
+        - Location
+      description: Search for a location by geographic coordinate.
+      parameters:
+        - name: distance
+          in: query
+          description: Default is 1000m (distance=1000), max distance is 5000.
+          type: integer
+
+        - name: facebook_places_id
+          in: query
+          description: |
+            Returns a location mapped off of a Facebook places id. If used, a
+            Foursquare id and lat, lng are not required.
+          type: integer
+
+        - name: foursquare_id
+          in: query
+          description: |
+            returns a location mapped off of a foursquare v1 api location id.
+            If used, you are not required to use lat and lng. Note that this
+            method is deprecated; you should use the new foursquare IDs with V2
+            of their API.
+          type: integer
+
+        - name: lat
+          in: query
+          description: |
+            atitude of the center search coordinate. If used, lng is required.
+          type: number
+
+        - name: lng
+          in: query
+          description: |
+            ongitude of the center search coordinate. If used, lat is required.
+          type: number
+
+        - name: foursquare_v2_id
+          in: query
+          description: |
+            Returns a location mapped off of a foursquare v2 api location id. If
+            used, you are not required to use lat and lng.
+          type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Location'
+
+  /geographies/{geo-id}/mp3/recent:
+    parameters:
+      - name: geo-id
+        in: path
+        description: Geolocation ID
+        type: integer
+        required: true
+    get:
+      description: |
+        Get recent mp3 from a geography subscription that you created.
+        #**Note**: You can only access Geographies that were explicitly created
+        #by your OAuth client. Check the Geography Subscriptions section of the
+        #[real-time updates page](https://instagram.com/developer/realtime/).
+        #When you create a subscription to some geography
+        #that you define, you will be returned a unique geo-id that can be used
+        #in this query. To backfill photos from the location covered by this
+       # geography, use the [mp3 search endpoint
+        #](https://instagram.com/developer/endpoints/mp3/).
+      parameters:
+        - name: count
+          in: query
+          description: Max number of mp3 to return.
+          type: integer
+        - name: min_id
+          in: query
+          description: Return mp3 before this `min_id`.
+          type: integer
+      responses:
+        200:
+          description: OK           
+            
+###
+# definitions
+###
+
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+      username:
+        type: string
+      full_name:
+        type: string
+      #profile_picture:
+      #  type: string
+      bio:
+        type: string
+      website:
+        type: string
+      counts:
+        type: object
+        properties:
+          mp3:
+            type: integer
+          follows:
+            type: integer
+          follwed_by:
+            type: integer
+  Mp3:
+    type: object
+    properties:
+      created_time:
+        description: Epoc time (ms)
+        type: integer
+      type:
+        type: string
+      filter:
+        type: string
+      tags:
+        type: array
+        items:
+          $ref: '#/definitions/Tag'
+      id:
+        type: integer
+      user:
+        $ref: '#/definitions/MiniProfile'
+      users_in_photo:
+        type: array
+        items:
+          $ref: '#/definitions/MiniProfile'
+      location:
+        $ref: '#/definitions/Location'
+      comments::
+        type: object
+        properties:
+          count:
+            type: integer
+          data:
+            type: array
+            items:
+              $ref: '#/definitions/Comment'
+      likes:
+        type: object
+        properties:
+          count:
+            type: integer
+          data:
+            type: array
+            items:
+              $ref: '#/definitions/MiniProfile'
+      images:
+        properties:
+          low_quality:
+            $ref: '#/definitions/Image'
+          thumbnail:
+            $ref: '#/definitions/Image'
+          standard_quality:
+            $ref: '#/definitions/Image'
+      audios:
+        properties:
+          low_quality:
+            $ref: '#/definitions/Image'
+          standard_quality:
+            $ref: '#/definitions/Image'
+  Location:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      latitude:
+        type: number
+      longitude:
+        type: number
+  Comment:
+    type: object
+    properties:
+      id:
+        type: string
+      created_time:
+        type: string
+      text:
+        type: string
+      from:
+        $ref: '#/definitions/MiniProfile'
+  Like:
+    type: object
+    properties:
+      user_name:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      type:
+        type: string
+      id:
+        type: string
+  Tag:
+    type: object
+    properties:
+      mp3_count:
+        type: integer
+      name:
+        type: string
+  Image:
+    type: object
+    properties:
+      width:
+        type: integer
+      height:
+        type: integer
+      url:
+        type: string
+  MiniProfile:
+    type: object
+    description: A shorter version of User for likes array
+    properties:
+      user_name:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+      profile_picture:
+        type: string
