@@ -5,7 +5,7 @@ include('request_controller.php');
 $controller = new RequestController();
 //$qy = new DBConnector();
 
-echo json_encode($controller->execute());
+ json_encode($controller->execute());
 
 
 //echo json_encode($controller->execute());

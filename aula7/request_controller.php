@@ -14,13 +14,11 @@ class RequestController
 			return array("code" => "405", "message" => "method not allowed");
 			
 		}	
-		return new Request($request_info['REQUEST_METHOD'],
-			$request_info['SERVER_PROTOCOL'],
-			$request_info['SERVER_ADDR'],
-			$request_info['REMOTE_ADDR'],
-			$request_info['REQUEST_URI'],
-			$request_info['QUERY_STRING'],
-			file_get_contents('php://input'));	
+		
+
+		
+		return new Request($request_info['REQUEST_METHOD'],$request_info['SERVER_PROTOCOL'],$request_info['SERVER_ADDR'],$request_info['REMOTE_ADDR'],$request_info['REQUEST_URI'],$request_info['QUERY_STRING'],file_get_contents('php://input'));
+		
 	}
 	
 	public function is_valid_method($method)
@@ -31,10 +29,23 @@ class RequestController
 		return true;
 	}
 
+
+
 	public function execute() {
 		$request = self::create_request($_SERVER);
 		$resource_controller = new ResourceController();
 	        return $resource_controller->treat_request($request);
 	}
+
+
+
+
+
+
+
+
+
+
+
 
 }

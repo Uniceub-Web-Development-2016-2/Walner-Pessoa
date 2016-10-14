@@ -14,10 +14,8 @@ class Request{
         $this->protocol = $protocol;
         $this->server_ip = $serverAddress;
         $this->remote_ip = $clientAddress;
-        $this->setResource($path);  /// forma mais simples de codigo
-        //$this->resource = self::setResource($path);
-        $this->setParams($queryString);   /// forma mais simples de codigo
-        //$this->params = $this->setParams($queryString);
+        $this->setResource($path);
+        $this->setParams($queryString);
         $this->body = $body;
     }
 		 
@@ -26,34 +24,10 @@ class Request{
                 $Inc = 1;
                 foreach($this->params as $param) {
                         $request .= "P".$Inc."=".$param."&amp";
-                        // não entedi essa linha ///////////////////// pedir ajuda para CAIO
                         $Inc++;
         }
         return $this->protocol.'://'.$this->server_ip.'/'.$this->resource.'?'.$request;
         }
-
-//////////////////////////////////////////////
-        // GETs AND SETs
-//////////////////////////////////////////////
-        public function setResource($resource){
-            $s = explode("?", $resource);
-            $r = explode("/", $s[0]);
-            $this->resource = $r[2];        
-        }
-        public function getResource(){
-                return $this->resource;
-        }
-//////////////////////////////////////////////
-        public function setParams($paramsString)
-        {
-            parse_str($paramsString, $paramsArray);
-             $this->params = $paramsArray;
-             //var_dump($this->param);
-        }  
-        public function getParameters(){
-                return $this->params;
-        } 
-//////////////////////////////////////////////
         public function setMethod($method){
                 $this->method = $method;
         }
@@ -72,12 +46,49 @@ class Request{
         public function getServer_IP(){
                 return $this->server_ip;
         }
-        public function setRemote_IP($Remote_ip){
+         public function setRemote_IP($Remote_ip){
                 $this->remote_ip = $remote_ip;
         }
         public function getRemote_IP(){
                 return $this->remote_ip;
         }
+        public function setResource($resource){
+        	$s = explode("?", $resource);
+		$r = explode("/", $s[0]);
+		$this->resource = $r[2];		
+	}
+        public function getResource(){
+                return $this->resource;
+        }
+        
+	public function setParams($paramsString)
+    	{
+        	parse_str($paramsString, $paramsArray);
+       		 $this->params = $paramsArray;
+    	}	
+
+        public function getParameters(){
+                return $this->params;
+        }
+
+	public function getBody() {
+		return $this->body;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
