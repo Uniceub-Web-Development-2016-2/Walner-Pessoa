@@ -9,7 +9,12 @@ class ResourceController
 	//
 	// montagem das request de forma estática para 
 	//
-	private $COLUNAS = 
+	//private $ENTIDADES =
+	//[
+	//'user', 'poema', 'avaliacao_MP3', 'audio_MP3', 'autor', 'categoria', 'tipo_user'
+	//	] 
+
+	private $FULLQUERY = 
  	[
  	'user' => 'SELECT nme_user, nme_tipo_user FROM user JOIN poema ON cod_user = user_id 
 				JOIN tipo_user ON cod_tipo = tipo_user_id group by user_id' ,
@@ -22,13 +27,16 @@ class ResourceController
   				JOIN poema ON cod_poema = poema_id
   				JOIN autor on cod_autor = autor_id
   				JOIN categoria on cod_categoria = categoria_id
-  				GROUP BY cod_audio_MP3 order by nme_poema, totallike DESC;'
+  				GROUP BY cod_audio_MP3 order by nme_poema, totallike DESC',
+  	'autor' => 'SELECT * FROM autor',
+  	'categoria' => 'SELECT * FROM categoria',
+  	'tipo_user' => 'SELECT * FROM tipo_user',
+  	'audio_MP3' => 'SELECT * FROM audio_MP3',
+ 	'avaliacao_MP3' => 'SELECT * FROM avaliacao_MP3',
+ 	 'tipoUser' => 'SELECT * FROM tipo_user ' 
+
+
 	];
-
-
-
-
-
 
 	public function treat_request($request) 
 	{
@@ -48,32 +56,36 @@ class ResourceController
 		{
 			$query = 'SELECT * FROM '.$request->getResource().' WHERE '.self::queryParams($request->getParameters());
 			
-		}else $query= $this->COLUNAS[$request->getResource()];
+		}else $query= $this->FULLQUERY[$request->getResource()];
 		
-		var_dump($query);
+		//var_dump($query);
 		$result = (new DBConnector())->query($query);
+
+		//// precisa fechar essa coneção no final CLose ()
 		
 		$retorno=$result->fetchall(PDO::FETCH_ASSOC);
 		//$retorno=json_encode($result->fetchAll(PDO::FETCH_ASSOC));
 
 		//var_dump($retorno);
 		foreach ($retorno as $key=>$value) {
-				var_dump($value); // imprime cada registro
+		//		var_dump($value); // imprime cada registro
 		}
 		return $retorno;
 	}
 	
-	private function create($request) {
+	private function create($request) 
+	{
 		$body = $request->getBody();
 		$resource = $request->getResource();
 		$query = 'INSERT INTO '.$resource.' ('.$this->getColumns($body).') VALUES ('.$this->getValues($body).')';
 		(new DBConnector())->query($query);//->execute();
-
+		var_dump($query);
 		return $query;
 		 
 	}
 	
-	private function update($request) {
+	private function update($request) 
+	{
 		var_dump($request);
                 $body = $request->getBody();
                 $resource = $request->getResource();
@@ -82,7 +94,7 @@ class ResourceController
 		//die();
 		return $query;
 
-        }
+    }
 
 	
 	private function getUpdateCriteria($json)
@@ -92,7 +104,8 @@ class ResourceController
 		$array = json_decode($json, true);
 		var_dump($array); 
 		die();
-		foreach($array as $key => $value) {
+		foreach($array as $key => $value) 
+		{
 			if($key != 'id')
 
 				$criteria .= $key." = '".$value."',";
@@ -122,9 +135,11 @@ class ResourceController
         
         }
 		
-	private function queryParams($params) {
+	private function queryParams($params) 
+	{
 		$query = "";		
-		foreach($params as $key => $value) {
+		foreach($params as $key => $value) 
+		{
 			$query .= $key.' = '.$value.' AND ';	
 		}
 		$query = substr($query,0,-5);

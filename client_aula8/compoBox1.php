@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-
-<body>
- 
-  <form action="requests.php" method="post">
-
-  	<input type="text" name="nme_poema" value="teste comunicacao 210"><br>
-    <input type="date" name="dt_cadastro" value="20160912"><br>
- 	<input type="text" name="txt_poema" value="Por que Deus permite que as maes vao-se embora. Mae não tem limite. Morrer acontece com o que eh"><br>
-		
-	<?php 
+<?php 
 
 		$conexao = mysqli_connect("localhost:3306","root","root", "db_PoesiAPP");
 
@@ -55,11 +45,3 @@
 		echo "<br>";
 
   	?>
- 	<input type="submit" value="Submit">
-
-</form> 
-</body>
-</html>
-
-
-

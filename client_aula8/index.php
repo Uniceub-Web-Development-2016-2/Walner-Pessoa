@@ -7,58 +7,51 @@
   	<input type="text" name="nme_poema" value="teste comunicacao 210"><br>
     <input type="date" name="dt_cadastro" value="20160912"><br>
  	<input type="text" name="txt_poema" value="Por que Deus permite que as maes vao-se embora. Mae não tem limite. Morrer acontece com o que eh"><br>
-  	<!-- <input type="text" name="cod_autor" value="1"><br> -->
-
-
-
-
-
-
 		
-		<?php 
-		include_once ('db_manager.php');
-		$query=('select * from autor ');
-		(new DBConnector())->query($query);
+	<?php 
 
-		//// precisa fechar essa coneção no final CLose ()
-		
-		$result = (new DBConnector())->query($query); 
-		$resultado=$result->fetchall(PDO::FETCH_ASSOC);
-
-		print_r($resultado);
-		////////////////
-
-		//mysql_connect('localhost:3306','root','root');
-		//mysql_select_db('db_PoesiAPP');
-		//$sql= "select nme_autor from autor";
-		//$result = mysql_query($sql);
-		echo    	"<select name='cod_autor'>";
-		$i=0;
-		foreach ($resultado as $key => $value) {
-			$resultadoArray=$value;
-			foreach ($resultadoArray as $key => $value) {
-				echo "<option value='".$key."'>" . $value . "</option>";
-			}
-			$i++;
+		$contents = file_get_contents('http://localhost/poemaMP3/autor');
+		$dados = json_decode($contents, true);
+		$number=sizeof($dados);
+		//var_dump($dados[0]);
+		echo "<select name='cod_autor'>";
+		foreach ($dados as $key => $child) 
+		{
+			echo "<option value='".array_shift(array_values($child))."'>" . array_pop(array_values($child)). "</option>";
 		}
-		
-		echo 	"</select>";  	 	
+		echo "</select>";  	 			
+		echo "<br>";
 
-		?>
-		
-		
-  	<br><br>
-  	<input type="text" name="cod_categoria" value="2"><br>
-  	<input type="text" name="cod_user" value="3"><br>
- 	 <input type="submit" value="Submit">
+		$contents = file_get_contents('http://localhost/poemaMP3/categoria');
+		$dados = json_decode($contents, true);
+		$number=sizeof($dados);
+		//var_dump($dados[0]);
+		echo "<select name='cod_categoria'>";
+		foreach ($dados as $key => $child) 
+		{
+			echo "<option value='".array_shift(array_values($child))."'>" . array_pop(array_values($child)). "</option>";
+		}
+		echo "</select>";  	 			
+		echo "<br>";
 
+		$contents = file_get_contents('http://localhost/poemaMP3/tipoUser');
+		$dados = json_decode($contents, true);
+		$number=sizeof($dados);
+		//var_dump($dados[0]);
+		echo "<select name='cod_user'>";
+		foreach ($dados as $key => $child) 
+		{
+			echo "<option value='".array_shift(array_values($child))."'>" . array_pop(array_values($child)). "</option>";
+		}
+		echo "</select>";  	 			
+		echo "<br>";
+	
+
+  	?>
+ 	<input type="submit" value="Submit">
 
 </form> 
-
 </body>
-
-
-
 </html>
 
 
