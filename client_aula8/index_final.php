@@ -1,12 +1,6 @@
 <!DOCTYPE html>
-<head>
-	<title>POEMA MP3</title>
-</head>
+
 <body>
-
-<p>Cadastrar Poema:</p>
-
-
  
   <form action="requests.php" method="post">
 
@@ -14,12 +8,7 @@
     <input type="date" name="dt_cadastro" value="20160912"><br>
  	<input type="text" name="txt_poema" value="Por que Deus permite que as maes vao-se embora. Mae não tem limite. Morrer acontece com o que eh"><br>
 		
-
 	<?php 
-
-		ini_set('display_errors',1);
-		ini_set('display_startup_erros',1);
-		error_reporting(E_ALL);
 
 		$contents = file_get_contents('http://localhost/poemaMP3/autor');
 		$dados = json_decode($contents, true);
@@ -45,7 +34,7 @@
 		echo "</select>";  	 			
 		echo "<br>";
 
-		$contents = file_get_contents('http://localhost/poemaMP3/userTodos');
+		$contents = file_get_contents('http://localhost/poemaMP3/tipoUser');
 		$dados = json_decode($contents, true);
 		$number=sizeof($dados);
 		//var_dump($dados[0]);
