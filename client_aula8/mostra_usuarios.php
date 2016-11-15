@@ -4,16 +4,16 @@
 </head>
 <body>
 
-<p>MOSTRA POEMA CADASTRADOS:</br>
-<p>Nome do Poema --------------->   Tipo de Usuário:</br>
+<p>MOSTRA USUARIOS CADASTRADOS:</br>
+<p>Nome do Usuário -------->   Tipo de usuário:</br>
 
 
 <?php
 
 
-	include_once('mostrar.php');
-	$valor = new MostraPoema(); 
-	$dados=$valor->toShowPoema('http://localhost/poemaMP3/poema');
+	include_once('mostraUsu.php');
+	$valor = new MostraUsuario(); 
+	$dados=$valor->toShowUsuario();
 	//$dados=toShowPoema();
 
 

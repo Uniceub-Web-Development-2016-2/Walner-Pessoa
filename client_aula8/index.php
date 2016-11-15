@@ -1,69 +1,29 @@
 <!DOCTYPE html>
+
 <head>
-	<title>POEMA MP3</title>
+	<title>POEMA MP3 - TRABALHO DISCIPLINA DESENVOLVIMENTO WEB - PROF CAIO</title>
 </head>
 <body>
 
-<p>Cadastrar Poema:</p>
 
 
- 
-  <form action="requests.php" method="post">
+	<h1>Poema MP3</h1>
+	<p>Menu Principal:</br>
+	<p>CRUDs:</br>
 
-  	<input type="text" name="nme_poema" value="teste comunicacao 210"><br>
-    <input type="date" name="dt_cadastro" value="20160912"><br>
- 	<input type="text" name="txt_poema" value="Por que Deus permite que as maes vao-se embora. Mae não tem limite. Morrer acontece com o que eh"><br>
-		
+	 <a href="http://localhost/client_aula8/user.php">Cadastrar Usuário</a><br>
+	 <a href="http://localhost/client_aula8/cadastro.php">Cadastrar Poema</a> 
+	 
+	 <p>Exibir:</br>
 
-	<?php 
-
-		ini_set('display_errors',1);
-		ini_set('display_startup_erros',1);
-		error_reporting(E_ALL);
-
-		$contents = file_get_contents('http://localhost/poemaMP3/autor');
-		$dados = json_decode($contents, true);
-		$number=sizeof($dados);
-		//var_dump($dados[0]);
-		echo "<select name='cod_autor'>";
-		foreach ($dados as $key => $child) 
-		{
-			echo "<option value='".array_shift(array_values($child))."'>" . array_pop(array_values($child)). "</option>";
-		}
-		echo "</select>";  	 			
-		echo "<br>";
-
-		$contents = file_get_contents('http://localhost/poemaMP3/categoria');
-		$dados = json_decode($contents, true);
-		$number=sizeof($dados);
-		//var_dump($dados[0]);
-		echo "<select name='cod_categoria'>";
-		foreach ($dados as $key => $child) 
-		{
-			echo "<option value='".array_shift(array_values($child))."'>" . array_pop(array_values($child)). "</option>";
-		}
-		echo "</select>";  	 			
-		echo "<br>";
-
-		$contents = file_get_contents('http://localhost/poemaMP3/userTodos');
-		$dados = json_decode($contents, true);
-		$number=sizeof($dados);
-		//var_dump($dados[0]);
-		echo "<select name='cod_user'>";
-		foreach ($dados as $key => $child) 
-		{
-			echo "<option value='".array_shift(array_values($child))."'>" . array_pop(array_values($child)). "</option>";
-		}
-		echo "</select>";  	 			
-		echo "<br>";
+	 <a href="http://localhost/client_aula8/mostra_poema.php">Mostrar Poemas cadastrados</a> <br>
 	
 
-  	?>
- 	<input type="submit" value="Submit">
+	
+	 <a href="http://localhost/client_aula8/mostra_usuarios.php">Mostrar Usuários cadastrados Puts!</a> <br>
+	 <a href="http://localhost/client_aula8/mostra_ranking.php"">Mostrar Ranking</a> 
 
-</form> 
+	 </p>
+
 </body>
 </html>
-
-
-
