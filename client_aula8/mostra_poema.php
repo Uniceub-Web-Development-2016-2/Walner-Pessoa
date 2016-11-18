@@ -20,7 +20,7 @@
 	foreach ($dados as $key => $child)
 
 		{
-			//echo var_dump(array_values($child));
+			
 
 			//echo "<p>".array_values($child)." --> " . array_pop(array_values($child)). "</p>";
 			echo "<p>".array_shift(array_values($child))." --> " . array_pop(array_values($child)). "</p>";

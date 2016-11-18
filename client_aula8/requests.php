@@ -3,13 +3,13 @@
 include('httpful.phar');
 
 //$uri = 'http://localhost/poemaMP3/poema_texto"';
-$uri = 'http://localhost/aula8/poema_texto"';
+$uri = 'http://localhost/poemaMP3/poema_texto';
 
 $json=json_encode($_POST);
 //$uri = 'http://localhost/poemaMP3/poema/'.$_POST.'"';
 //$uri = 'http://localhost/aula8/create/'.$_POST.'"';
 
-var_dump(json_encode($_POST));                               
+//evar_dump(json_encode($_POST));                               
 //var_dump(json_encode(utf8_encode($_POST)));
 $response = \Httpful\Request::post($uri)->sendsJson()->body($json)->send();
 echo $response->body;
