@@ -22,8 +22,6 @@ class DBConnector extends PDO {
 		
 }
 
-//$result = (new DBConnector())->query('select * from tb_tipo_usuario ');
-//var_dump($result->fetchAll());
 
 
 

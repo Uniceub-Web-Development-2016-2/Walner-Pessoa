@@ -36,16 +36,4 @@ class RequestController
 		$resource_controller = new ResourceController();
 	        return $resource_controller->treat_request($request);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
 }

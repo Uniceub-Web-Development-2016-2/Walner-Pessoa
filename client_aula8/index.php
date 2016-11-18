@@ -7,11 +7,11 @@
 
 
 
-	<h1>Poema MP3</h1>
+	<h1>Poema MP3 - beta</h1>
 	<p>Menu Principal:</br>
 	<p>CRUDs:</br>
 
-	 <a href="http://localhost/client_aula8/user.php">Cadastrar Usuário</a><br>
+	 <a href="http://localhost/client_aula8/user_cadastro.php">Cadastrar Usuário</a><br>
 	 <a href="http://localhost/client_aula8/cadastro.php">Cadastrar Poema</a> 
 	 
 	 <p>Exibir:</br>

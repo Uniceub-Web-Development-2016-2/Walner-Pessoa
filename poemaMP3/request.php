@@ -6,7 +6,7 @@ class Request{
         private $remote_ip;
         private $resource;
         private $params;
-	private $body;
+	    private $body;
   
 	 public function __construct($method, $protocol, $serverAddress, $clientAddress, $path, $queryString, $body)
     {
@@ -79,6 +79,8 @@ class Request{
         public function getRemote_IP(){
                 return $this->remote_ip;
         }
-
+        public function getBody() {
+        return $this->body;
+    }
 
 }
