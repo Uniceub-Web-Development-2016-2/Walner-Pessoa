@@ -1,3 +1,7 @@
+	
+
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -58,6 +62,8 @@
 								<input type="checkbox"> Remember me
 							</label>
 						</div>
+						<a href="http://localhost/client_aula8/user_cadastro.php">Cadastrar novo usuário</a> <br>
+
 					</div>
 				</div>
 				<div class="form-group">

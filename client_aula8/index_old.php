@@ -1,3 +1,6 @@
+<?php
+	session_start();
+?>	
 <!DOCTYPE html>
 
 <head>
@@ -5,7 +8,9 @@
 </head>
 <body>
 
-
+			<?php	
+			echo "<h3>Seja bem-vindo, {$_SESSION["nome"]},  você está cadastrada desde  : {$_SESSION["data"]}</h3>";
+			?>
 
 	<h1>Poema MP3 - beta</h1>
 	<p>Menu Principal:</br>

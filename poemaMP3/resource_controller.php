@@ -14,11 +14,11 @@ class ResourceController
 	//'user', 'poema', 'avaliacao_MP3', 'audio_MP3', 'autor', 'categoria', 'tipo_user'
 	//	] 
 
-	private $FULLQUERY = 
+	private $STATICQUERY = 
  	[
  	'user' => 'SELECT nme_user, nme_tipo_user FROM user JOIN poema_texto ON cod_user = user_id 
 				JOIN tipo_user ON cod_tipo = tipo_user_id group by user_id' ,
- 	'poema' => 'SELECT nme_poema,nme_user, nme_tipo_user FROM user
+ 	'poema_texto' => 'SELECT nme_poema,nme_user, nme_tipo_user FROM user
 				JOIN  poema_texto ON cod_user = user_id JOIN tipo_user ON cod_tipo = tipo_user_id  order by nme_poema' ,
 	'ranking' => 'SELECT nme_poema, nme_autor,nme_categoria,local_arq_MP3,
 				Sum(case when like_dislike=1 then 1 else 0 end) AS totallike
@@ -39,11 +39,53 @@ class ResourceController
 
 	];
 
+
+///////////////////////////////////////////'
+
 	public function treat_request($request) 
 	{
+		//var_dump($request ->getMethod());
+		//var_dump($request ->getOperation());
+		//var_dump($this->login($request));
+
+		if($request ->getMethod() == "POST" && $request ->getOperation() =="login")
+		{
+			return $this->login($request);
+		}
+	
 		return $this->{$this->METHODMAP[$request->getMethod()]}($request);
 	
+}	
+///////////////////////////////////////////'
+
+	public function login($request) 
+	{
+	$query = 'SELECT * FROM '.$request->getResource().' WHERE '.self::bodyParams($request->getBody());
+	$result = (new DBConnector())->query($query);		
+	$retorno=$result->fetchall(PDO::FETCH_ASSOC);
+		//var_dump($retorno);
+
+	return $retorno;
+
 	}
+
+	private function bodyParams($json) 
+	{
+		$criteria = "";
+		$array = json_decode($json, true);
+		//var_dump($array); 
+		//die();
+		foreach($array as $key => $value) 
+		{
+				$criteria .= $key." = '".$value."' AND ";
+		}
+		return substr($criteria, 0, -5);
+
+	}
+
+
+
+
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	private function search($request) 
@@ -51,19 +93,25 @@ class ResourceController
 		//
 		//MONTAGEM DA QUERY COM PARAMETROS E SEM PARAMETROS
 		//
+		//echo 'entrou';
 		if (self::queryParams($request->getParameters()))
 		{
 			$query = 'SELECT * FROM '.$request->getResource().' WHERE '.self::queryParams($request->getParameters());
 			
-		}else $query= $this->FULLQUERY[$request->getResource()];
+		}else $query= $this->STATICQUERY[$request->getResource()];
 		
 		$result = (new DBConnector())->query($query);		
 		$retorno=$result->fetchall(PDO::FETCH_ASSOC);
+	    //$retornoDados = $result->fetchAll(PDO::FETCH_OBJ);  
+		//echo $retornoDados;
+		//var_dump($retorno); // $result;
+		//var_dump($retornoDados); // $result;
 
 		foreach ($retorno as $key=>$value) {
+		//		var_dump($value); // imprime cada registro
 		}
 		return $retorno;
-		$retorno= null; // fechar conexao 
+		$result= null; // fechar conexao 
 	}
 	//////////////////////////////////////////////////////////////////////////////////////
 
@@ -73,6 +121,8 @@ class ResourceController
 		$resource = $request->getResource();
 		$query = 'INSERT INTO '.$resource.' ('.$this->getColumns($body).') VALUES ('.$this->getValues($body).')';
 		$result=(new DBConnector())->query($query);//->execute();
+		echo "entrei Insert";
+
 		echo $query;
 		return $query;
 		$result = null; // fechar conexao 
@@ -82,13 +132,16 @@ class ResourceController
 
 	private function update($request) 
 	{
-		var_dump($request);
+		//var_dump($request);
                 $body = $request->getBody();
                 $resource = $request->getResource();
                 $query = 'UPDATE '.$resource.' SET '. $this->getUpdateCriteria($body);
-                var_dump($query);
-		//die();
-		return $query;
+                //var_dump($query);
+                echo "entrei Update";
+				//die();
+				$result=(new DBConnector())->query($query);//->execute();
+				return $query;
+				$result = null; // fechar conexao 
 
     }
 
@@ -98,8 +151,8 @@ class ResourceController
 		$criteria = "";
 		$where = " WHERE ";
 		$array = json_decode($json, true);
-		var_dump($array); 
-		die();
+		//var_dump($array); 
+		//die();
 		foreach($array as $key => $value) 
 		{
 			if($key != 'id')

@@ -11,10 +11,10 @@ class DBConnector extends PDO {
    
     public function __construct(){
         $this->engine = 'mysql';
-        $this->host = 'localhost';
-        $this->database = 'aula';
+        $this->host = 'localhost:3306';
+        $this->database = 'db_PoesiAPP';
         $this->user = 'root';
-        $this->pass = '';
+        $this->pass = 'root';
         $dns = $this->engine.':dbname='.$this->database.";host=".$this->host;
         parent::__construct( $dns, $this->user, $this->pass );
     }	

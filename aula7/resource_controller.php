@@ -1,6 +1,7 @@
 <?php
 
 include_once ('request.php');
+include_once ('db_manager.php');
 
 class ResourceController
 {	
@@ -20,6 +21,8 @@ class ResourceController
 		$body = $request->getBody();
 		$resource = $request->getResource();
 		$query = 'INSERT INTO '.$resource.' ('.$this->getColumns($body).') VALUES ('.$this->getValues($body).')';
+		(new DBConnector())->query($query);//->execute();
+
 		return $query;
 		 
 	}
@@ -29,7 +32,7 @@ class ResourceController
                 $resource = $request->getResource();
                 $query = 'UPDATE '.$resource.' SET '. $this->getUpdateCriteria($body);
                 var_dump($query);
-		die();
+		//die();
 		return $query;
 
         }
@@ -40,28 +43,25 @@ class ResourceController
 		$criteria = "";
 		$where = " WHERE ";
 		$array = json_decode($json, true);
+
 		foreach($array as $key => $value) {
+			var_dump('key '.$key.'value  '.$value);
 			if($key != 'id')
 				$criteria .= $key." = '".$value."',";
 			
 		}
 		return substr($criteria, 0, -1).$where." id = ".$array['id'];
 	}	
-
-
-
-
 	
-
-	
-
 	
 	private function getColumns($json) 
 	{
 		$array = json_decode($json, true);
 		$keys = array_keys($array);
-		return implode(",", $keys);
-	
+		$string =  implode("`,`", $keys);
+		//var_dump($string);
+		//return implode(",", $keys);
+		return "`".$string."`";	
 	}
 
 	private function getValues($json) 
@@ -69,38 +69,10 @@ class ResourceController
                 $array = json_decode($json, true);
                 $keys = array_values($array);
                 $string =  implode("','", $keys);
+                //var_dump($string);
 		return "'".$string."'";
         
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		
 	private function queryParams($params) {
 		$query = "";		
@@ -110,11 +82,5 @@ class ResourceController
 		$query = substr($query,0,-5);
 		return $query;
 	}
-
-	
 		
 }
-
-
-
-
