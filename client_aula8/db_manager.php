@@ -11,7 +11,8 @@ class DBConnector extends PDO {
    
     public function __construct(){
         $this->engine = 'mysql';
-        $this->host = 'localhost:3306';
+//        $this->host = 'localhost:3306';
+        $this->host = 'localhost';
         $this->database = 'db_PoesiAPP';
         $this->user = 'root';
         $this->pass = 'root';
@@ -21,7 +22,6 @@ class DBConnector extends PDO {
     }	
 		
 }
-
 
 
 
