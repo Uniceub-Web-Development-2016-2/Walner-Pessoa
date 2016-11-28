@@ -64,7 +64,7 @@ class Request{
         {
             parse_str($paramsString, $paramsArray);
              $this->params = $paramsArray;
-             //var_dump($this->param);
+             //var_dump ($this->param);
         }  
         public function getParameters(){
                 return $this->params;
