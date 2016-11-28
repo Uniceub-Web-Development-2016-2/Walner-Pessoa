@@ -4,7 +4,7 @@
 </head>
 <body>
 
-<p>Cadastrar Usuário:</p>
+<h3>CADASTRAR NOVO USUÁRIO:</h3>
  
   <form action="requests_user.php" method="post">
 

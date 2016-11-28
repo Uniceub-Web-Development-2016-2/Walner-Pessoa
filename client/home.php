@@ -59,7 +59,7 @@
 							</label>
 							</div>
 
-							<a href="http://localhost/client_aula8/user_cadastro.php">Registrar novo usuário</a> <br>
+							<a href="http://localhost/client/user_cadastro.php">Registrar novo usuário</a> <br>
 						
 					</div>
 				</div>
