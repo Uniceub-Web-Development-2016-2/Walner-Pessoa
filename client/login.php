@@ -32,7 +32,7 @@ if($_POST["email_user"] != null && $_POST["senha_user"] != null)
 
 	}else
 	{
-		echo "Pode não mano veio!";
+		echo "E-MAIL OU SENHA NÃO CONFERE!";
 		//chamar página de erro
 	}
 }

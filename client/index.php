@@ -24,7 +24,9 @@
 					Desfio Poesia MP3
 				</h2>
 				<p>
-					Esse é um espaço de desafios de rankeamento de poesias. Se você se acha bom em declamar esse gênero literário. Clique abaixo para entrar.
+					Esse é um espaço de desafios de rankeamento de poesias. Se você se acha bom em declamar esse gênero literário. Clique abaixo para entrar. <br><br>
+
+          IMPORTANTE: Essa é uma versão Beta. As telas estão com a interface gráfica muito está simples, ou seja estão sem aplicar os padrões CSS. 
 				</p>
 				<p>
 					<a class="btn btn-primary btn-large" href="home.php">ENTRAR</a>

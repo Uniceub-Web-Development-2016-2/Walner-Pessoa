@@ -24,9 +24,13 @@
 					Desfio Poesia MP3
 				</h2>
 				<p>
-					Entre com sua senha ou clique no link Registar Novo Usuário
+					Entre com sua senha ou clique no link Registar Novo Usuário.<br>
+					(para teste use login: Lupa@gmail.com e Senha:123456)
 				</p>
 			</div>
+
+			<!--   FORMULARIO -->
+
 			<form class="form-horizontal" action="login.php" method="post">
 				<div class="form-group">
 					 
